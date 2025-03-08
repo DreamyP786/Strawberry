@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strawberry Apology</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            text-align: center;
+            font-family: 'Poppins', sans-serif;
+            background: url('https://www.transparenttextures.com/patterns/straws.png'), linear-gradient(to bottom, #ffb3c1, #ff758f);
+            color: #d63384;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            font-family: 'Pacifico', cursive;
+            font-size: 2.5em;
+            margin-top: 30px;
+            color: #ff2e63;
+            text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.8);
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .sorry-box {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            width: 300px;
+            max-width: 90%; /* Responsive width */
+            text-align: center;
+            margin: 10px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .btn {
+            border: none;
+            padding: 12px 20px;
+            margin: 10px;
+            font-size: 1em;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .agree {
+            background: #ff4d6d;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .agree:hover {
+            background: #d63384;
+        }
+
+        .more-sorry {
+            background: white;
+            color: #d63384;
+            border: 2px solid #d63384;
+        }
+
+        .more-sorry:hover {
+            background: #d63384;
+            color: white;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .final-message {
+            font-size: 2em;
+            font-weight: bold;
+            color: #ff4d6d;
+            text-shadow: 2px 2px 10px rgba(255, 255, 255, 0.8);
+            animation: bounce 1s infinite;
+        }
+
+        /* Strawberry Confetti */
+        .falling {
+            position: absolute;
+            top: -50px;
+            animation: fall linear infinite;
+            user-select: none;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .thank-you {
+            font-size: 1.5em;
+            margin-top: 20px;
+            color: #ff4d6d;
+        }
+
+        /* Shake animation */
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+            100% { transform: translateX(0); }
+        }
+
+        .shake {
+            animation: shake 0.3s ease-in-out;
+        }
+
+        /* Media query for smaller screens */
+        @media (max-width: 600px) {
+            .falling {
+                font-size: 15px; /* Reduce confetti size on small screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="content">
+        <h1 id="apologyHeader">Oops! I'm Really Sorry!</h1>
+        <div class="container" id="sorry-container">
+            <div class="sorry-box">
+                <p id="sorry-text">What can I do to make it up to you? 🤔</p>
+                <button class="agree btn" onclick="acceptApology()">Okay, I Forgive You! 🎉</button>
+                <button class="more-sorry btn" onclick="denyApology(this)">Not convinced yet 🥺</button>
+            </div>
+        </div>
+    </div>
+    <!-- Placeholder for sound effect -->
+    <audio id="successSound" src="https://pixabay.com/sound-effects/success-1-6297/" preload="auto"></audio>
+    <audio id="yaySound" src="https://pixabay.com/sound-effects/yay-6326/" preload="auto"></audio>
+    <audio id="denialSound" src="https://pixabay.com/sound-effects/buzzer-227217/" preload="auto"></audio>
+
+    <script>
+        let apologies = [
+            "Okay, I admit it, I was wrong! 😥",
+            "How long will this last? 🥺",
+            "I'm running out of ideas! 😫",
+            "Fine, this is my 100th sorry! 😩",
+            "Can we at least negotiate? 😟",
+            "You win! I give up! 😨",
+            "Please, I’ll get you strawberries! 🍓",
+            "Even my cat feels bad for me now! 😿",
+            "I'll bake you strawberry shortcake! 🍰",
+            "I'll bring you chocolate in class tomorrow! 🍫",
+            "I'll do your assignment for a week! 📝",
+            "I’ll get you coffee every morning! ☕",
+            "I'll save you a seat in every lecture! 💺",
+            "I promise to never be late again! ⏰",
+            "I’ll get you the best study notes! 📒",
+            "I'll help you with your project! 💻",
+            "I’ll treat you to ice cream after class! 🍦",
+            "I'll never skip class again... probably! 😉"
+        ];
+
+        let denials = [
+            "Nope, try harder! 😏",
+            "Still not enough, convince me more! 🥺",
+            "You're gonna have to do better than that! 😒",
+            "Not buying it, keep going! 🙄",
+            "Is that all? I expected more! 🤔",
+            "Hmm, let me think... Nope! 😂",
+            "Come on, give me a real apology! 😒",
+            "Maybe if you add a bonus gift! 🎁",
+            "Getting closer, but not quite yet! 🤨",
+            "You sure that's enough? I need more! 😒",
+            "Not even close! 😜",
+            "That's your best shot? I'm disappointed! 😞",
+            "Keep dreaming! 🤣",
+            "Needs more effort! 💪",
+            "Try again, but with feeling! 😉",
+            "Still waiting for a genuine apology! 😐",
+            "Is that all you've got? 🤷‍♀️",
+            "Prove you mean it! 😠",
+            "I'm not easily convinced! 😎",
+            "Gotta do better than that, sweetie! 😈"
+        ];
+
+        let finalMessages = [
+            "Woohoo! The peace treaty is signed! 🎉✨",
+            "Finally! I thought I'd be apologizing forever! 😅🥳",
+            "Forgiveness unlocked! 🎮 Achievement complete!",
+            "You have freed me from the endless loop! 😥😂",
+            "Party time! 🥳 Now let's pretend that never happened!"
+        ];
+
+        let thankYouEmojis = ["😊", "🎉", "🍓","🥳"];
+
+        let forgivenessAffirmations = [
+            " (Yay!)",
+            " (You're the best!)",
+            " (Friends again?)",
+            " (I knew you'd forgive me!)",
+            " (Best day ever!)",
+            " (Apology accepted!)",
+            " (Let's move on!)",
+            " (I appreciate it!)",
+            " (All is forgiven!)",
+            " (I'm so happy!)"
+        ];
+
+        let sorryIndex = 0;
+        let maxApologies = 20;
+        let hasShownFinalMessage = false;
+
+        function addMoreSorry() {
+            if (sorryIndex >= maxApologies) {
+                showFinalMessage();
+                return;
+            }
+
+            let container = document.getElementById("sorry-container");
+            let newBox = document.createElement("div");
+            newBox.className = "sorry-box";
+            let affirmation = forgivenessAffirmations[Math.floor(Math.random() * forgivenessAffirmations.length)];
+            
+            let innerHTML = `<p>${apologies[sorryIndex % apologies.length]}</p>
+                <button class="agree btn" onclick="acceptApology()">Okay, I Forgive You!${affirmation}</button>`;
+
+            // Conditionally add the "Not convinced yet" button
+            if (sorryIndex < maxApologies - 1) {
+                innerHTML += `<button class="more-sorry btn" onclick="denyApology(this)">Not convinced yet 🥺</button>`;
+            }
+            
+            newBox.innerHTML = innerHTML;
+            container.appendChild(newBox);
+            sorryIndex++;
+        }
+
+        function acceptApology() {
+            // Play the yay sound
+            let soundYay = document.getElementById("yaySound");
+            if (soundYay) {
+                soundYay.play();
+            }
+            stopApologizing();
+        }
+
+        function stopApologizing() {
+            let contentDiv = document.getElementById("content");
+            let randomEmoji = thankYouEmojis[Math.floor(Math.random() * thankYouEmojis.length)];
+            contentDiv.innerHTML = `
+                <div class="container">
+                    <h1 class="final-message">${finalMessages[Math.floor(Math.random() * finalMessages.length)]}</h1>
+                    <p class="thank-you">Thank you, Strawberry! ${randomEmoji}</p>
+                </div>
+            `;
+
+            // Play the success sound
+            let soundSuccess = document.getElementById("successSound");
+            if (soundSuccess) {
+                soundSuccess.play();
+            }
+
+            createConfetti();
+        }
+
+        function showFinalMessage() {
+            if (hasShownFinalMessage) {
+                return;
+            }
+
+            let contentDiv = document.getElementById("content");
+            contentDiv.innerHTML = `
+                <div class="container">
+                    <div class="sorry-box">
+                        <p>I've ran out of sorries! Please forgive me! 🙏</p>
+                        <button class="agree btn" onclick="acceptApology()">Okay, I Forgive You! 🎉</button>
+                    </div>
+                </div>
+            `;
+            hasShownFinalMessage = true;
+        }
+
+        function createConfetti() {
+            for (let i = 0; i < 30; i++) {
+                let confetti = document.createElement("div");
+                confetti.innerHTML = "🍓";
+                confetti.className = "falling";
+                confetti.style.left = Math.random() * 100 + "vw";
+                confetti.style.animationDuration = Math.random() * 2 + 3 + "s";
+                confetti.style.fontSize = Math.random() * 30 + 10 + "px";
+                document.body.appendChild(confetti);
+            }
+        }
+
+       function denyApology(button) {
+            // Play the denial sound
+            let soundDenial = document.getElementById("denialSound");
+            if (soundDenial) {
+                soundDenial.play();
+            }
+
+            button.classList.add("shake");
+            setTimeout(() => {
+                button.classList.remove("shake");
+                
+                // Select a random denial message
+                let denialMessage = denials[Math.floor(Math.random() * denials.length)];
+                
+                // Update the button text with the new denial message
+                button.textContent = denialMessage;
+
+                if (sorryIndex < maxApologies) {
+                    addMoreSorry();
+                } else {
+                    showFinalMessage();
+                }
+            }, 300); // Animation duration
+        }
+    </script>
+</body>
+</html>
